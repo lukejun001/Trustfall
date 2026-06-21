@@ -30,12 +30,14 @@ def device_config(name):
 
 def tokenized_row(row, tokenizer, max_length):
     prompt = tokenizer.apply_chat_template(row["messages"][:-1], tokenize=False, add_generation_prompt=True, enable_thinking=False)
-    full = tokenizer.apply_chat_template(row["messages"], tokenize=False, add_generation_prompt=False, enable_thinking=False)
     prompt_ids = tokenizer(prompt, add_special_tokens=False)["input_ids"]
-    full_ids = tokenizer(full, add_special_tokens=False, truncation=True, max_length=max_length)["input_ids"]
-    labels = full_ids.copy()
-    labels[: min(len(prompt_ids), len(labels))] = [-100] * min(len(prompt_ids), len(labels))
-    return {"input_ids": full_ids, "labels": labels}
+    response_ids = tokenizer(row["messages"][-1]["content"] + tokenizer.eos_token, add_special_tokens=False)["input_ids"]
+    # Keep the complete target JSON. When a source email is long, discard the
+    # oldest prompt tokens rather than silently masking the entire answer.
+    response_ids = response_ids[:max_length]
+    prompt_budget = max(0, max_length - len(response_ids))
+    prompt_ids = prompt_ids[-prompt_budget:] if prompt_budget else []
+    return {"input_ids": prompt_ids + response_ids, "labels": [-100] * len(prompt_ids) + response_ids}
 
 
 def collate(batch, pad_id):
@@ -57,7 +59,7 @@ def main():
     parser.add_argument("--device", choices=["auto", "cpu", "mps", "cuda"], default="auto")
     parser.add_argument("--epochs", type=int, default=8)
     parser.add_argument("--learning-rate", type=float, default=2e-4)
-    parser.add_argument("--max-length", type=int, default=1536)
+    parser.add_argument("--max-length", type=int, default=512)
     parser.add_argument("--seed", type=int, default=42)
     args = parser.parse_args()
     torch.manual_seed(args.seed)
@@ -69,8 +71,11 @@ def main():
     tokenizer = AutoTokenizer.from_pretrained(args.model)
     if tokenizer.pad_token_id is None:
         tokenizer.pad_token = tokenizer.eos_token
-    model = AutoModelForCausalLM.from_pretrained(args.model, torch_dtype=dtype)
+    model = AutoModelForCausalLM.from_pretrained(args.model, dtype=dtype)
     model.config.use_cache = False
+    # This is essential for a 0.6B model on an 18 GB Apple unified-memory pool.
+    model.gradient_checkpointing_enable(gradient_checkpointing_kwargs={"use_reentrant": False})
+    model.enable_input_require_grads()
     model.to(device)
     config = LoraConfig(
         task_type=TaskType.CAUSAL_LM, r=8, lora_alpha=16, lora_dropout=0.05,

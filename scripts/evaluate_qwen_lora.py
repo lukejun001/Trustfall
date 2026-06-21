@@ -57,7 +57,7 @@ def main():
     if tokenizer.pad_token_id is None:
         tokenizer.pad_token = tokenizer.eos_token
     dtype = torch.float32 if device == "cpu" else torch.float16
-    base = AutoModelForCausalLM.from_pretrained(args.model, torch_dtype=dtype).to(device)
+    base = AutoModelForCausalLM.from_pretrained(args.model, dtype=dtype).to(device)
     model = PeftModel.from_pretrained(base, args.adapter_dir).to(device)
     model.eval()
     for row in rows:
