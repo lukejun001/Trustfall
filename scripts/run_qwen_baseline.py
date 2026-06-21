@@ -22,7 +22,7 @@ def load_rows(url: str):
     except ImportError as exc:
         raise SystemExit("Postgres requires `pip install psycopg[binary]`.") from exc
     with psycopg.connect(url) as conn, conn.cursor() as cur:
-        cur.execute(query, (False,))
+        cur.execute(query.replace('?', '%s'), (False,))
         names = [desc.name for desc in cur.description]
         return [dict(zip(names, row)) for row in cur.fetchall()]
 
