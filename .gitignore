@@ -5,3 +5,4 @@ prisma/dev.db-journal
 qa-fixtures/generated-eml/
 qa-output/
 *.eml
+baseline_before_training/

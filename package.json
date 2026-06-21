@@ -19,7 +19,8 @@
     "qa:eml:import": "tsx scripts/qa-import-fake-eml.ts",
     "qa:eml:report": "tsx scripts/qa-report-fake-eml.ts",
     "qa:eml": "npm run qa:eml:generate && npm run qa:eml:import && npm run qa:eml:report",
-    "test:e2e:full": "mkdir -p tmp && rm -f tmp/trustfall-e2e-test.db && touch tmp/trustfall-e2e-test.db && DATABASE_URL='file:../tmp/trustfall-e2e-test.db' npx prisma migrate deploy && DATABASE_URL='file:../tmp/trustfall-e2e-test.db' tsx scripts/full-e2e.ts"
+    "test:e2e:full": "mkdir -p tmp && rm -f tmp/trustfall-e2e-test.db && touch tmp/trustfall-e2e-test.db && DATABASE_URL='file:../tmp/trustfall-e2e-test.db' npx prisma migrate deploy && DATABASE_URL='file:../tmp/trustfall-e2e-test.db' tsx scripts/full-e2e.ts",
+    "baseline:qwen": "python3 scripts/run_qwen_baseline.py"
   },
   "dependencies": {
     "@prisma/client": "^6.7.0",

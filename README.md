@@ -33,6 +33,10 @@ Set `TERAC_CALLBACK_BASE_URL` to Terac’s completion callback origin or URL. `/
 
 Set `TERAC_API_KEY` only in `.env` or your deployment secret store; never expose it to the browser. `GET /api/terac/pilot` lists projects (read-only). `POST /api/terac/pilot` supports `create_project` and `create_wave1_draft`, but only after setting `TERAC_PILOT_WRITE_ENABLED=true`. The integration deliberately does not expose Terac's launch endpoint: creating a draft is safe for review, while launch begins recruitment and may incur cost.
 
+## Pre-training Qwen baseline
+
+Run this locally after real Wave 1 data is collected (never in Vercel): `python3 -m pip install -r requirements-baseline.txt && npm run baseline:qwen`. It reads only sanitized, non-synthetic messages and writes immutable JSONL predictions to `baseline_before_training/`; it does not train, modify, or export source records.
+
 ## Vercel
 
 Set `DATABASE_URL` to a production-compatible Prisma database (SQLite is for local development; use a hosted relational database adapter before production deployment) and `TERAC_CALLBACK_BASE_URL` in Vercel project settings. Run `prisma generate` during build if your deployment environment does not do it automatically.
