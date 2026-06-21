@@ -7,7 +7,7 @@ export async function GET(request: Request) {
   const participant = await prisma.teracParticipant.upsert({ where: { teracSubmissionId: id }, update: { wave: "label" }, create: { teracSubmissionId: id, wave: "label", status: "label_started" } });
   let assignments = await prisma.labelAssignment.findMany({ where: { participantId: participant.id }, include: { message: { select: { id: true, sanitizedText: true, source: true, shortContext: true } } }, orderBy: { position: "asc" } });
   if (!assignments.length) {
-    const candidates = await prisma.collectedMessage.findMany({ where: { submittedByParticipantId: { not: participant.id }, labels: { none: { labeledByParticipantId: participant.id } }, assignments: { none: { participantId: participant.id } } }, include: { _count: { select: { labels: true } } } });
+    const candidates = await prisma.collectedMessage.findMany({ where: { isSyntheticTestFixture: false, submittedByParticipantId: { not: participant.id }, labels: { none: { labeledByParticipantId: participant.id } }, assignments: { none: { participantId: participant.id } } }, include: { _count: { select: { labels: true } } } });
     if (candidates.length < required) return NextResponse.json({ ready: false, required, available: candidates.length, messages: [] });
     const shuffled = candidates.sort((a, b) => a._count.labels - b._count.labels || Math.random() - 0.5).slice(0, required);
     await prisma.$transaction(shuffled.map((message, position) => prisma.labelAssignment.create({ data: { participantId: participant.id, messageId: message.id, position } })));
