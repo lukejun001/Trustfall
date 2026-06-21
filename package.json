@@ -1,0 +1,42 @@
+{
+  "name": "trustfall-terac",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:postgres:generate": "prisma generate --schema=prisma/postgres/schema.prisma",
+    "prisma:postgres:deploy": "prisma migrate deploy --schema=prisma/postgres/schema.prisma",
+    "vercel-build": "prisma generate --schema=prisma/postgres/schema.prisma && prisma migrate deploy --schema=prisma/postgres/schema.prisma && next build",
+    "export:train": "tsx scripts/export-train.ts",
+    "export:eval": "tsx scripts/export-eval.ts",
+    "test:sanitization": "tsx scripts/test-sanitization.ts",
+    "qa:eml:generate": "tsx scripts/generate-fake-eml-fixtures.ts",
+    "qa:eml:import": "tsx scripts/qa-import-fake-eml.ts",
+    "qa:eml:report": "tsx scripts/qa-report-fake-eml.ts",
+    "qa:eml": "npm run qa:eml:generate && npm run qa:eml:import && npm run qa:eml:report",
+    "test:e2e:full": "mkdir -p tmp && rm -f tmp/trustfall-e2e-test.db && touch tmp/trustfall-e2e-test.db && DATABASE_URL='file:../tmp/trustfall-e2e-test.db' npx prisma migrate deploy && DATABASE_URL='file:../tmp/trustfall-e2e-test.db' tsx scripts/full-e2e.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.7.0",
+    "next": "^15.3.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.0",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.3",
+    "prisma": "^6.7.0",
+    "tailwindcss": "^3.4.17",
+    "tsx": "^4.19.0",
+    "typescript": "^5.8.0"
+  }
+}

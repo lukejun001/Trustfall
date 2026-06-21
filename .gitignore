@@ -1,0 +1,7 @@
+node_modules
+.next
+.env
+prisma/dev.db-journal
+qa-fixtures/generated-eml/
+qa-output/
+*.eml

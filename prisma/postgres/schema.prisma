@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
+
+model TeracParticipant {
+  id String @id @default(cuid())
+  teracSubmissionId String? @unique
+  startedAt DateTime @default(now())
+  completedAt DateTime?
+  collectionCompletedAt DateTime?
+  labelCompletedAt DateTime?
+  wave String @default("collect")
+  status String @default("started")
+  messages CollectedMessage[]
+  labels MessageLabel[]
+  assignments LabelAssignment[]
+}
+model CollectedMessage {
+  id String @id @default(cuid())
+  submittedByParticipantId String
+  submittedByParticipant TeracParticipant @relation(fields: [submittedByParticipantId], references: [id])
+  sanitizedText String
+  inputMethod String @default("text_paste")
+  sanitizedSubject String?
+  sanitizedBody String?
+  source String
+  initialUserBelief String
+  shortContext String?
+  fromDomain String?
+  replyToDomain String?
+  returnPathDomain String?
+  fromReplyToMismatch Boolean?
+  linkFeatures String?
+  authSummary String?
+  hasAttachments Boolean @default(false)
+  attachmentExtensions String?
+  attachmentsStripped Boolean @default(true)
+  emlParsedClientSide Boolean?
+  isSyntheticTestFixture Boolean @default(false)
+  parserWarnings String?
+  createdAt DateTime @default(now())
+  labels MessageLabel[]
+  assignments LabelAssignment[]
+}
+model MessageLabel {
+  id String @id @default(cuid())
+  messageId String
+  message CollectedMessage @relation(fields: [messageId], references: [id])
+  labeledByParticipantId String
+  labeledByParticipant TeracParticipant @relation(fields: [labeledByParticipantId], references: [id])
+  riskLevel String
+  scamType String
+  redFlags String
+  recommendedAction String
+  plainEnglishWarning String
+  confidence Int
+  rationale String
+  createdAt DateTime @default(now())
+  @@unique([messageId, labeledByParticipantId])
+}
+model LabelAssignment {
+  id String @id @default(cuid())
+  participantId String
+  participant TeracParticipant @relation(fields: [participantId], references: [id])
+  messageId String
+  message CollectedMessage @relation(fields: [messageId], references: [id])
+  position Int
+  assignedAt DateTime @default(now())
+  completedAt DateTime?
+  @@unique([participantId, messageId])
+  @@unique([participantId, position])
+}
+model QualityFlag {
+  id String @id @default(cuid())
+  targetType String
+  targetId String
+  reason String
+  createdAt DateTime @default(now())
+}

@@ -1,0 +1,10 @@
+import assert from "node:assert/strict";
+import { parseEml } from "../lib/eml";
+import { redact } from "../lib/redact";
+const text = "See https://usps-redelivery-payments.com/release?id=937293. Email jane@example.com, call 415-555-0199, code 123456.";
+const safe = redact(text);
+assert.match(safe, /hxxps:\/\/usps-redelivery-payments\[\.\]com\/\[PATH\]/);
+assert.match(safe, /\[EMAIL\]/); assert.match(safe, /\[PHONE\]/); assert.match(safe, /\[CODE\]/); assert.doesNotMatch(safe, /id=937293/);
+const eml = "From: Billing <billing@paypal-alert.example>\nReply-To: help@other.example\nSubject: Verify your account\nAuthentication-Results: spf=fail dkim=fail dmarc=fail\nContent-Type: multipart/mixed; boundary=abc\n\n--abc\nContent-Type: text/plain\n\nPay at https://paypal-alert.example/pay?id=private\n--abc\nContent-Disposition: attachment; filename=invoice.pdf\n\nnot saved\n--abc--";
+const preview = parseEml(eml);
+assert.equal(preview.fromDomain, "paypal-alert[.]example"); assert.equal(preview.replyToDomain, "other[.]example"); assert.equal(preview.fromReplyToMismatch, true); assert.equal(preview.hasAttachments, true); assert.deepEqual(preview.attachmentExtensions, ["pdf"]); assert.match(preview.sanitizedBody, /\[LINK:/); assert.doesNotMatch(preview.sanitizedBody, /id=private/); console.log("Sanitization and .eml parsing checks passed.");

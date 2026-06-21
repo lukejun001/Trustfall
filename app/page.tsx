@@ -1,0 +1,2 @@
+import Link from "next/link";
+export default function Home() { return <main className="shell"><div className="card"><p className="text-cyan-300">Trustfall</p><h1 className="mt-2 text-4xl font-bold">Human judgment makes scam safety better.</h1><p className="mt-4 text-slate-300">Collect privacy-protected, human-labeled examples through Terac.</p><Link className="btn mt-6" href="/terac">Open Terac workflow</Link></div></main>; }
