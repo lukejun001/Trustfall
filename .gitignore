@@ -3,8 +3,15 @@ node_modules
 .env
 .env.local
 .venv-baseline/
+.venv-qwen/
+.DS_Store
+dev.db
+__pycache__/
 prisma/dev.db-journal
 qa-fixtures/generated-eml/
 qa-output/
 *.eml
 baseline_before_training/
+wave2_training_data/
+qwen_lora_artifacts/
+wave2_evaluation/
