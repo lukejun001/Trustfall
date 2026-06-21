@@ -26,7 +26,8 @@
     "eval:qwen-lora": "python3 scripts/evaluate_qwen_lora.py",
     "run:wave2-qwen": "python3 scripts/run_wave2_qwen.py",
     "presentation:refresh": "python3 scripts/refresh_presentation_metrics.py",
-    "presentation:build": "node scripts/generate_presentation.cjs"
+    "presentation:build": "node scripts/generate_presentation.cjs",
+    "demo:record": "node scripts/record_demo.cjs"
   },
   "dependencies": {
     "@prisma/client": "^6.7.0",
@@ -40,6 +41,7 @@
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
     "autoprefixer": "^10.4.21",
+    "playwright": "^1.61.0",
     "postcss": "^8.5.3",
     "pptxgenjs": "^4.0.1",
     "prisma": "^6.7.0",
