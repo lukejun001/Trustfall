@@ -1,4 +1,23 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { isReviewableForLabeling } from "@/lib/review";
+
 export const dynamic = "force-dynamic";
-export async function GET() { const required = Number(process.env.LABELS_PER_PARTICIPANT ?? 8) || 8; const messages = await prisma.collectedMessage.count({ where: { isSyntheticTestFixture: false } }); return NextResponse.json({ ready: messages >= required, realMessages: messages, labelsPerParticipant: required, remainingMessages: Math.max(0, required - messages) }); }
+
+export async function GET() {
+  const required = Number(process.env.LABELS_PER_PARTICIPANT ?? 8) || 8;
+  const messages = await prisma.collectedMessage.findMany({
+    where: { isSyntheticTestFixture: false },
+    select: { sanitizedText: true },
+  });
+  const eligibleMessages = messages.filter((message) =>
+    isReviewableForLabeling(message.sanitizedText),
+  ).length;
+
+  return NextResponse.json({
+    ready: eligibleMessages >= required,
+    realMessages: eligibleMessages,
+    labelsPerParticipant: required,
+    remainingMessages: Math.max(0, required - eligibleMessages),
+  });
+}
