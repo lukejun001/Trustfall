@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { isReviewableForLabeling } from "@/lib/review";
 const labelsPerParticipant = () => { const n = Number(process.env.LABELS_PER_PARTICIPANT ?? 8); return Number.isInteger(n) && n > 0 ? n : 8; };
 export async function GET(request: Request) {
   const id = new URL(request.url).searchParams.get("teracSubmissionId"); if (!id) return NextResponse.json({ error: "Missing participant ID" }, { status: 400 });
@@ -8,8 +9,9 @@ export async function GET(request: Request) {
   let assignments = await prisma.labelAssignment.findMany({ where: { participantId: participant.id }, include: { message: { select: { id: true, sanitizedText: true, source: true, shortContext: true } } }, orderBy: { position: "asc" } });
   if (!assignments.length) {
     const candidates = await prisma.collectedMessage.findMany({ where: { isSyntheticTestFixture: false, submittedByParticipantId: { not: participant.id }, labels: { none: { labeledByParticipantId: participant.id } }, assignments: { none: { participantId: participant.id } } }, include: { _count: { select: { labels: true } } } });
-    if (candidates.length < required) return NextResponse.json({ ready: false, required, available: candidates.length, messages: [] });
-    const shuffled = candidates.sort((a, b) => a._count.labels - b._count.labels || Math.random() - 0.5).slice(0, required);
+    const reviewable = candidates.filter(message => isReviewableForLabeling(message.sanitizedBody ?? message.sanitizedText));
+    if (reviewable.length < required) return NextResponse.json({ ready: false, required, available: reviewable.length, messages: [] });
+    const shuffled = reviewable.sort((a, b) => a._count.labels - b._count.labels || Math.random() - 0.5).slice(0, required);
     await prisma.$transaction(shuffled.map((message, position) => prisma.labelAssignment.create({ data: { participantId: participant.id, messageId: message.id, position } })));
     assignments = await prisma.labelAssignment.findMany({ where: { participantId: participant.id }, include: { message: { select: { id: true, sanitizedText: true, source: true, shortContext: true } } }, orderBy: { position: "asc" } });
   }
