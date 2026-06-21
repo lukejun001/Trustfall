@@ -19,11 +19,15 @@ def main():
     data = Path("wave2_training_data") / stamp
     adapter = Path("qwen_lora_artifacts") / stamp
     evaluation = Path("wave2_evaluation") / stamp
-    baseline_files = sorted(Path("baseline_before_training").glob("*.jsonl"))
+    baseline_dir = Path("baseline_before_training") / stamp
+    baseline_file = baseline_dir / "test-baseline.jsonl"
+    # Order matters: freeze the dataset, score the base model on the untouched
+    # test inputs BEFORE training, then train on train only, then evaluate once.
     commands = [
         [sys.executable, str(root / "build_wave2_dataset.py"), "--output-dir", str(data), "--min-labels", str(args.min_labels), "--min-agreement", str(args.min_agreement)],
+        [sys.executable, str(root / "run_qwen_baseline.py"), "--dataset-dir", str(data), "--split", "test", "--output-dir", str(baseline_dir), "--device", args.device],
         [sys.executable, str(root / "train_qwen_lora.py"), "--dataset-dir", str(data), "--output-dir", str(adapter), "--device", args.device, "--epochs", str(args.epochs)],
-        [sys.executable, str(root / "evaluate_qwen_lora.py"), "--dataset-dir", str(data), "--adapter-dir", str(adapter), "--output-dir", str(evaluation), "--device", args.device] + (["--baseline-file", str(baseline_files[-1])] if baseline_files else []),
+        [sys.executable, str(root / "evaluate_qwen_lora.py"), "--dataset-dir", str(data), "--adapter-dir", str(adapter), "--output-dir", str(evaluation), "--device", args.device, "--baseline-file", str(baseline_file)],
     ]
     for command in commands:
         print("+", " ".join(command))

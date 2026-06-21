@@ -75,11 +75,29 @@ def agreement(labels, key):
     return max(Counter(label[key] for label in labels).values()) / len(labels)
 
 
-def is_train_id(identifier):
+def _stable_hash(identifier):
     number = 0
     for char in identifier:
         number = ((number * 31) + ord(char)) & 0xFFFFFFFF
-    return number % 10 < 8
+    return number
+
+
+def is_train_id(identifier):
+    return _stable_hash(identifier) % 10 < 8
+
+
+def split_bucket(identifier):
+    """Deterministic, message-level 70/15/15 train/validation/test assignment.
+
+    The bucket depends only on the message id, so the same message always lands
+    in the same split and individual worker labels never leak across splits.
+    """
+    position = _stable_hash(identifier) % 100
+    if position < 70:
+        return "train"
+    if position < 85:
+        return "validation"
+    return "test"
 
 
 def model_input(row):

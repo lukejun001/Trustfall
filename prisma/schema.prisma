@@ -47,6 +47,7 @@ model CollectedMessage {
   createdAt               DateTime          @default(now())
   labels                  MessageLabel[]
   assignments             LabelAssignment[]
+  expertAdjudication      ExpertAdjudication?
 }
 
 model MessageLabel {
@@ -85,4 +86,24 @@ model QualityFlag {
   targetId   String
   reason     String
   createdAt  DateTime @default(now())
+}
+
+// Final-target expert layer. Additive only: it never overwrites worker
+// MessageLabel rows. One adjudication per message; the original worker
+// evidence used is preserved as a compact JSON snapshot.
+model ExpertAdjudication {
+  id                  String           @id @default(cuid())
+  messageId           String           @unique
+  message             CollectedMessage @relation(fields: [messageId], references: [id])
+  adjudicatorId       String           @default("claude-code-expert")
+  candidateReason     String
+  riskLevel           String
+  scamType            String
+  redFlags            String
+  recommendedAction   String
+  plainEnglishWarning String
+  rationale           String
+  evidence            String
+  adjudicatedAt       DateTime         @default(now())
+  createdAt           DateTime         @default(now())
 }

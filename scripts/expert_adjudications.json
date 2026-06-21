@@ -1,0 +1,304 @@
+{
+  "_about": "Final-target expert adjudications by claude-code-expert for real, sanitized pilot messages that lacked independent-worker consensus (single label, no labels, or low agreement) or were otherwise ambiguous. These are an ADDITIVE final-target layer; worker MessageLabel rows are never modified. Values use the app's controlled vocabularies (lib/constants.ts). This file contains no raw message bodies, addresses, or secrets. Two reviewable-but-unusable candidates were intentionally excluded as gibberish / an incomplete fragment and are recorded in `_excluded`.",
+  "_adjudicator": "claude-code-expert",
+  "_vocabularies": {
+    "risk_level": ["safe", "low", "medium", "high", "unsure"],
+    "scam_type": ["not_scam", "delivery_phishing", "bank_phishing", "fake_job", "fake_check", "crypto", "romance", "marketplace", "tech_support", "government_impersonation", "account_takeover", "payment_app", "other", "unsure"]
+  },
+  "_excluded": [
+    {"message_id": "cmqna9hvz0004kz04jefwwsma", "reason": "gibberish keyboard mash ('12wflekfwfijweofijwe'); no analyzable content"},
+    {"message_id": "cmqngt7f4000al404wl2aq6no", "reason": "incomplete one-line conversational fragment with no link, request, or context; insufficient to adjudicate"}
+  ],
+  "adjudications": [
+    {
+      "message_id": "cmqnd0c94000el004kljujxiw",
+      "candidate_reason": "low_agreement",
+      "risk_level": "low",
+      "scam_type": "not_scam",
+      "red_flags": ["none"],
+      "recommended_action": "Treat this as a promotional email. If you want a loan, open the offer inside the official HDFC Bank app or by typing the bank's website yourself rather than tapping email links.",
+      "plain_english_warning": "This looks like a genuine pre-approved loan marketing email from HDFC Bank. It does not ask for passwords or payment, but as a habit, check any offer directly in your bank's app instead of trusting email links.",
+      "rationale": "Sender, reply-to and return-path all resolve to HDFC's real mailer domain with SPF and DMARC passing, links stay on that same domain, and nothing asks for credentials or money; this is a legitimate marketing message, so the safest defensible label is low rather than the split safe/medium worker guesses."
+    },
+    {
+      "message_id": "cmqnd0qmw000hl004096lkosq",
+      "candidate_reason": "low_agreement",
+      "risk_level": "low",
+      "scam_type": "not_scam",
+      "red_flags": ["none"],
+      "recommended_action": "Do not click links in the email. Search for the named class-action settlement and file through the official court-appointed settlement administrator's site you find independently.",
+      "plain_english_warning": "This reads like a real class-action settlement notice with a claim ID and PIN. It is probably legitimate, but verify it by searching for the official settlement website yourself before entering any details.",
+      "rationale": "The content matches the format of a genuine Google Assistant privacy class-action notice (court-directed language, unique claim ID and PIN); the sender could not be verified, so low with advice to confirm via the official administrator is more defensible than calling it safe or a scam."
+    },
+    {
+      "message_id": "cmqndazy5000mjv041isncghc",
+      "candidate_reason": "low_agreement",
+      "risk_level": "high",
+      "scam_type": "other",
+      "red_flags": ["suspicious_link", "weird_sender_or_domain"],
+      "recommended_action": "Do not click the link. Delete the message and block the sender.",
+      "plain_english_warning": "This is an unsolicited text with a vague come-on and a random, obscure web link. Do not tap it — links like this commonly lead to scam or malware sites.",
+      "rationale": "An unsolicited SMS from an unknown number containing only a teaser and an obfuscated random .sbs domain is a classic smishing payload; the workers split medium/high but the strongest defensible reading is high."
+    },
+    {
+      "message_id": "cmqnd8or80007jv04147fm32a",
+      "candidate_reason": "single_label",
+      "risk_level": "safe",
+      "scam_type": "not_scam",
+      "red_flags": ["none"],
+      "recommended_action": "No action needed. If you choose to participate, confirm the link stays on terac.com before signing in.",
+      "plain_english_warning": "This is a genuine paid-task invitation from Terac, the platform running this study. It is safe; just make sure any link you open stays on the official terac.com site.",
+      "rationale": "Authenticated from notifications.terac.com (SPF and DMARC pass) with all links on terac.com and no request for credentials or payment; this is the real platform's own invitation, so safe/not_scam is correct despite mild marketing urgency."
+    },
+    {
+      "message_id": "cmqnffxu4003xjx045q2qa7du",
+      "candidate_reason": "single_label",
+      "risk_level": "safe",
+      "scam_type": "not_scam",
+      "red_flags": ["none"],
+      "recommended_action": "No action needed. Use your referral link only on the official terac.com site.",
+      "plain_english_warning": "This is a real referral notice from Terac, the platform running this study. It is safe to ignore or to use as intended.",
+      "rationale": "Authenticated from notifications.terac.com with links on terac.com and no sensitive request; a genuine platform notification, so safe/not_scam."
+    },
+    {
+      "message_id": "cmqnffxu4003vjx04zl6rab75",
+      "candidate_reason": "single_label",
+      "risk_level": "safe",
+      "scam_type": "not_scam",
+      "red_flags": ["none"],
+      "recommended_action": "No action needed. Open any referral link only on the official terac.com site.",
+      "plain_english_warning": "This is a genuine referral-opportunity email from Terac, the platform running this study. It is safe.",
+      "rationale": "Same authenticated Terac referral template (SPF/DMARC pass, terac.com links, no credential or payment request); safe/not_scam is the defensible final target."
+    },
+    {
+      "message_id": "cmqng6zhy0004i8048coy36sq",
+      "candidate_reason": "no_labels",
+      "risk_level": "low",
+      "scam_type": "not_scam",
+      "red_flags": ["none"],
+      "recommended_action": "If you want to take part, log in through the official terac.com site rather than trusting any embedded link.",
+      "plain_english_warning": "This matches Terac's genuine paid-interview invitation. It is most likely legitimate; to be safe, reach Terac through its official website rather than email links.",
+      "rationale": "Content is the standard Terac paid-interview template, but this copy carries no sender-domain or authentication metadata to confirm it, so low (benign content, sender unverifiable) is more defensible than a clean safe."
+    },
+    {
+      "message_id": "cmqndazy5000ojv045vbnzsak",
+      "candidate_reason": "single_label",
+      "risk_level": "high",
+      "scam_type": "delivery_phishing",
+      "red_flags": ["suspicious_link", "impersonates_trusted_brand", "urgent_language"],
+      "recommended_action": "Do not click the link. Check any real delivery directly in the official courier app or website. Delete the message.",
+      "plain_english_warning": "This is a fake parcel-delivery text. The 'parcel' brand and the courier name don't match, and the link is a trap. Never confirm deliveries through links in texts like this.",
+      "rationale": "Unsolicited delivery SMS naming a mismatched brand ('Joybuy' parcel via a DPD link) with a time-pressure hook is textbook delivery smishing; the single worker's high rating is correct and I sharpen the scam type to delivery_phishing."
+    },
+    {
+      "message_id": "cmqndctvp000rjv04re5gudpc",
+      "candidate_reason": "no_labels",
+      "risk_level": "low",
+      "scam_type": "not_scam",
+      "red_flags": ["none"],
+      "recommended_action": "If interested, check the offer inside the official Bybit app rather than email links.",
+      "plain_english_warning": "This is a genuine promotional email from the Bybit crypto exchange. It is not a scam, but only act on crypto offers from inside the official app.",
+      "rationale": "Authenticated from mail.bybit.com (SPF and DMARC pass) with links on Bybit's own domain; a legitimate exchange promotion, so low/not_scam with standard verify-in-app advice."
+    },
+    {
+      "message_id": "cmqndi9zg000yjv04zukjjsuc",
+      "candidate_reason": "single_label",
+      "risk_level": "low",
+      "scam_type": "not_scam",
+      "red_flags": ["none"],
+      "recommended_action": "If you want the offer, open it from inside the official Airtel app rather than the text link.",
+      "plain_english_warning": "This looks like a real Airtel promotion, since the link points to Airtel's own site. To be safe, claim any offer from the official Airtel app instead of the text.",
+      "rationale": "The link resolves to i.airtel.in, Airtel's genuine domain, and the message offers a bundled service with no credential or payment request; low/not_scam is more defensible than the single worker's medium 'suspicious_link' guess."
+    },
+    {
+      "message_id": "cmqndj5r00016jv04tjf02v5g",
+      "candidate_reason": "single_label",
+      "risk_level": "high",
+      "scam_type": "fake_job",
+      "red_flags": ["suspicious_link", "weird_sender_or_domain", "too_good_to_be_true"],
+      "recommended_action": "Do not click the links or reply. Delete the email.",
+      "plain_english_warning": "This 'offer letter' is a job scam. A real employer doesn't send a surprise offer through a mass-mailer with no interview. Don't click the accept/reject links.",
+      "rationale": "An unsolicited 'offer letter' from clickearners.com routed through aweber mass-mailing links, with generic accept/reject prompts and boilerplate address, is a classic work-from-home / fake-job lure; the worker's high rating is correct and the precise type is fake_job."
+    },
+    {
+      "message_id": "cmqne65wj0004jo04x93zztc0",
+      "candidate_reason": "single_label",
+      "risk_level": "low",
+      "scam_type": "not_scam",
+      "red_flags": ["none"],
+      "recommended_action": "No action needed. If booking, go to the cinema's official site or app rather than email links.",
+      "plain_english_warning": "This is a normal cinema marketing newsletter advertising movies and loyalty perks. It is not a scam.",
+      "rationale": "Standard promotional newsletter from a real cinema chain (Ster-Kinekor) with loyalty/movie content and no sensitive request; benign marketing, so low/not_scam."
+    },
+    {
+      "message_id": "cmqnft4ry001bi504aera8gdp",
+      "candidate_reason": "single_label",
+      "risk_level": "low",
+      "scam_type": "not_scam",
+      "red_flags": ["none"],
+      "recommended_action": "If interested, independently verify the research company before joining, and never pay to take part or share financial details.",
+      "plain_english_warning": "This is a paid market-research recruitment email. These are often legitimate, but confirm the company is real first and remember a genuine study never asks you to pay.",
+      "rationale": "A paid focus-group recruitment with a plausible incentive and no link or payment request reads as legitimate market research; low/not_scam with a verify-the-company caution is the defensible target."
+    },
+    {
+      "message_id": "cmqnft4ry0019i504optb0v3t",
+      "candidate_reason": "single_label",
+      "risk_level": "medium",
+      "scam_type": "other",
+      "red_flags": ["suspicious_link", "too_good_to_be_true"],
+      "recommended_action": "Be cautious before filling out the form. Do not provide financial or identity details, and verify who 'Fanburster' is independently.",
+      "plain_english_warning": "This reply to a Craigslist ad pushes you to an outside Google Form with first-come urgency. Treat it carefully and never share payment or ID details to 'qualify'.",
+      "rationale": "An unsolicited Craigslist reply funnelling to an external Google Form with scarcity framing and a referral angle is a common low-grade gig/data-harvest scheme; medium is more defensible than the worker's low rating, though it stops short of confirmed fraud."
+    },
+    {
+      "message_id": "cmqnfxwkp001qi504vrqles0i",
+      "candidate_reason": "single_label",
+      "risk_level": "low",
+      "scam_type": "not_scam",
+      "red_flags": ["none"],
+      "recommended_action": "If you want to object or claim, go to the official settlement site by searching for it yourself rather than clicking the email link.",
+      "plain_english_warning": "This is a real legal notice about a class-action judgment against Google. It is informational and asks for nothing; just confirm any claim site independently.",
+      "rationale": "The notice tracks an actual federal class-action judgment against Google with specific, verifiable detail and makes no payment or credential request; low/not_scam, matching the worker's read."
+    },
+    {
+      "message_id": "cmqnfxwkq001si504cd97jxyr",
+      "candidate_reason": "single_label",
+      "risk_level": "low",
+      "scam_type": "not_scam",
+      "red_flags": ["none"],
+      "recommended_action": "No action needed. Register through the company's official site if you want to attend.",
+      "plain_english_warning": "This is a normal product/event marketing email from GitLab. It is not a scam.",
+      "rationale": "A legitimate corporate event-invitation newsletter naming real companies and a real product launch, with no sensitive request; low/not_scam, correcting the worker's overcautious medium."
+    },
+    {
+      "message_id": "cmqng6zhx0002i8044u77g39m",
+      "candidate_reason": "single_label",
+      "risk_level": "high",
+      "scam_type": "government_impersonation",
+      "red_flags": ["impersonates_trusted_brand", "requests_personal_info", "urgent_language", "too_good_to_be_true"],
+      "recommended_action": "Do not click anything or 'confirm billing details'. Delete it. TV Licensing never emails to release a refund this way; check your account by typing the official site yourself.",
+      "plain_english_warning": "This is a refund phishing scam impersonating TV Licensing. The promised refund and the request to 'confirm billing details' are bait to steal your card and personal information. Do not respond.",
+      "rationale": "A surprise refund that demands you 'confirm billing information' to release funds is a hallmark refund/billing phishing pattern impersonating UK TV Licensing; the lone worker wrongly marked this safe, and expert adjudication corrects it to high government_impersonation."
+    },
+    {
+      "message_id": "cmqng91hy0009i804r463g4dd",
+      "candidate_reason": "single_label",
+      "risk_level": "medium",
+      "scam_type": "fake_job",
+      "red_flags": ["too_good_to_be_true", "requests_personal_info"],
+      "recommended_action": "Do not send your resume or personal details yet. Verify the company and recruiter independently before engaging.",
+      "plain_english_warning": "This is an unsolicited recruiter email offering a vague gig and asking for your resume. Treat it with caution and confirm the company is real before sharing anything.",
+      "rationale": "An out-of-the-blue 'I came across your profile' recruiting pitch for a vague task that requests a resume is a common fake-job pattern; SPF/DMARC pass and the ask is mild, so medium fake_job (not high) is the defensible target, matching the worker's caution."
+    },
+    {
+      "message_id": "cmqng91hy0007i804sf4rs5jy",
+      "candidate_reason": "no_labels",
+      "risk_level": "low",
+      "scam_type": "not_scam",
+      "red_flags": ["none"],
+      "recommended_action": "No action needed. Look up showtimes on the studio's or cinema's official site if interested.",
+      "plain_english_warning": "This is a movie promotion from a film studio sent through a marketing service. It is not a scam.",
+      "rationale": "A Sony Pictures film-release promotion delivered via a standard email service provider with passing authentication and only marketing/unsubscribe links is benign; low/not_scam."
+    },
+    {
+      "message_id": "cmqngfpa40004l304148d24mo",
+      "candidate_reason": "no_labels",
+      "risk_level": "safe",
+      "scam_type": "not_scam",
+      "red_flags": ["none"],
+      "recommended_action": "No action needed. Track the order in the official Amazon app if you want details.",
+      "plain_english_warning": "This is an ordinary order-shipped notice with no link to click and nothing to confirm. It is safe.",
+      "rationale": "A plain shipping notification containing no link, no urgency, and no request, pointing the user to the official app, is benign; safe/not_scam."
+    },
+    {
+      "message_id": "cmqngfpa40002l304tj3m2iq5",
+      "candidate_reason": "no_labels",
+      "risk_level": "high",
+      "scam_type": "delivery_phishing",
+      "red_flags": ["urgent_language", "suspicious_link", "threatens_consequences"],
+      "recommended_action": "Do not click the link or confirm any address. Delete it. Check real deliveries only in the official courier app.",
+      "plain_english_warning": "This is a fake 'delivery delayed' message designed to scare you into clicking. The 24-hour deadline and the link are the scam. Never confirm your address through a link like this.",
+      "rationale": "A delayed-delivery notice demanding you 'confirm your address immediately' via a generic link under a 24-hour cancellation threat is textbook delivery phishing; high delivery_phishing."
+    },
+    {
+      "message_id": "cmqngvp76000fl404acb34v0a",
+      "candidate_reason": "single_label",
+      "risk_level": "medium",
+      "scam_type": "fake_job",
+      "red_flags": ["suspicious_link", "weird_sender_or_domain"],
+      "recommended_action": "Verify the sender before clicking 'apply'. Confirm the staffing agency through its official site rather than the email link.",
+      "plain_english_warning": "This shift-work job email could be from a real staffing agency, but the sender can't be confirmed and the 'apply' links are unverified. Check who sent it before clicking.",
+      "rationale": "An unsolicited shift-recruitment email with unverified 'click here to apply' links and no confirmable sender carries moderate fake-job risk; medium with a verify-sender caution is more defensible than the worker's 'unsure'."
+    },
+    {
+      "message_id": "cmqngvp75000dl404x1f4qljh",
+      "candidate_reason": "no_labels",
+      "risk_level": "medium",
+      "scam_type": "fake_job",
+      "red_flags": ["suspicious_link", "weird_sender_or_domain"],
+      "recommended_action": "Verify the sender before clicking 'apply'. Confirm the staffing agency through its official site rather than the email link.",
+      "plain_english_warning": "This shift-work job email could be from a real staffing agency, but the sender can't be confirmed and the 'apply' links are unverified. Check who sent it before clicking.",
+      "rationale": "Identical shift-recruitment content to the companion submission, with unverified apply links and no confirmable sender; adjudicated consistently as medium fake_job."
+    },
+    {
+      "message_id": "cmqngw34p000kl404wl4zdbku",
+      "candidate_reason": "no_labels",
+      "risk_level": "low",
+      "scam_type": "not_scam",
+      "red_flags": ["none"],
+      "recommended_action": "If interested in the EMI offer, open it inside the official ICICI Bank app or website rather than email links.",
+      "plain_english_warning": "This looks like a normal promotional email from ICICI Bank advertising No-Cost EMI. It is not a scam, but act on bank offers only through the official app.",
+      "rationale": "Bank marketing copy that explicitly redirects to the official ICICI app/website with no credential or payment request reads as legitimate promotion; low/not_scam with verify-in-app advice."
+    },
+    {
+      "message_id": "cmqngw34p000il404xikulhn0",
+      "candidate_reason": "no_labels",
+      "risk_level": "low",
+      "scam_type": "not_scam",
+      "red_flags": ["none"],
+      "recommended_action": "No action needed. This is an informational government newsletter; ignore or unsubscribe if unwanted.",
+      "plain_english_warning": "This is a routine government magazine newsletter from an Indian police-research bureau. It is informational and not a scam.",
+      "rationale": "A bilingual government magazine circular sent via an official gov.in channel, with only an unsubscribe action, is benign informational mail; low/not_scam."
+    },
+    {
+      "message_id": "cmqnh8t4o0009le04ux2bth68",
+      "candidate_reason": "no_labels",
+      "risk_level": "low",
+      "scam_type": "other",
+      "red_flags": ["too_good_to_be_true"],
+      "recommended_action": "Treat immigration-consultancy marketing with care. Never pay upfront fees and verify any consultant against official government immigration sources.",
+      "plain_english_warning": "This is lead-generation marketing from an immigration consultancy promising fast results. It is not outright fraud, but be cautious — check official government sites and avoid upfront fees.",
+      "rationale": "Immigration-consultancy content offering '60-second eligibility' and fast PR is lead-generation marketing that frequently shades into upfront-fee schemes; low/other with a do-not-pay caution is defensible without alleging confirmed fraud."
+    },
+    {
+      "message_id": "cmqnh8t4p000ble04xupqcvyc",
+      "candidate_reason": "no_labels",
+      "risk_level": "low",
+      "scam_type": "not_scam",
+      "red_flags": ["none"],
+      "recommended_action": "If interested, apply through the official Naukri site and independently verify the hiring company before sharing details.",
+      "plain_english_warning": "This is a normal job-board notification from Naukri inviting you to apply. It is generally legitimate; still verify the employer before sharing personal information.",
+      "rationale": "A standard job-portal (Naukri) invitation with the portal's own authenticity disclaimer and a detailed real-looking role is benign; low/not_scam with a verify-the-employer caution."
+    },
+    {
+      "message_id": "cmqnhm1xh000rkz0438k1ecbq",
+      "candidate_reason": "no_labels",
+      "risk_level": "medium",
+      "scam_type": "crypto",
+      "red_flags": ["too_good_to_be_true", "suspicious_link", "weird_sender_or_domain"],
+      "recommended_action": "Do not click the links or claim the bonus. Be skeptical of 'free credit' trading promotions.",
+      "plain_english_warning": "This pushes a crypto/prediction-market 'sign up and get $20 free' offer through a personal-looking address and tracking links. 'Free trading credit' promotions are a common hook — don't click.",
+      "rationale": "A mass 'free $20 trading bonus' crypto/prediction-market promotion sent from a personal outlook.com address via third-party tracking links combines too-good-to-be-true bait with a mismatched sender; medium crypto is the defensible level."
+    },
+    {
+      "message_id": "cmqnhm1xh000tkz04l50b3vtk",
+      "candidate_reason": "no_labels",
+      "risk_level": "low",
+      "scam_type": "not_scam",
+      "red_flags": ["none"],
+      "recommended_action": "No action needed. Remember that leveraged CFD/crypto trading carries real financial risk; only act inside the official Bitget app.",
+      "plain_english_warning": "This is a genuine market-commentary newsletter from the Bitget crypto exchange. It is not a scam, but the leveraged trading it promotes is financially risky.",
+      "rationale": "A long market-analysis newsletter from Bitget's authenticated promo domain (SPF/DMARC pass) with no credential or payment request is a legitimate exchange mailing; the from/reply-to difference is normal promo-vs-corporate domain use, so low/not_scam with a trading-risk caution."
+    }
+  ]
+}

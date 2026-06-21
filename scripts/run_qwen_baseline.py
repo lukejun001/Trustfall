@@ -27,6 +27,8 @@ def load_rows(url: str):
         return [dict(zip(names, row)) for row in cur.fetchall()]
 
 def user_content(row):
+    if row.get("_prebuilt_input") is not None:
+        return row["_prebuilt_input"]
     values = [
         ("Subject", row.get("sanitizedSubject")), ("From domain", row.get("fromDomain")),
         ("Reply-to domain", row.get("replyToDomain")), ("Return-path domain", row.get("returnPathDomain")),
@@ -43,17 +45,29 @@ def parse_json(text):
     try: return json.loads(match.group(0))
     except json.JSONDecodeError: return None
 
+def load_dataset_split(dataset_dir, split):
+    """Read frozen rows ({id, input}) so the baseline uses the EXACT test inputs."""
+    path = Path(dataset_dir) / f"{split}.jsonl"
+    rows = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    # Reuse the already-built model input verbatim; do not re-derive it.
+    return [{"id": row["id"], "_prebuilt_input": row["input"]} for row in rows]
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--database-url", default=os.getenv("DATABASE_URL"))
     parser.add_argument("--output-dir", default="baseline_before_training")
     parser.add_argument("--limit", type=int, default=0)
     parser.add_argument("--device", default="auto", choices=["auto", "cpu", "mps", "cuda"])
+    parser.add_argument("--dataset-dir", help="Run the baseline over a frozen split instead of the live DB.")
+    parser.add_argument("--split", default="test", help="Frozen split to score when --dataset-dir is given.")
     args = parser.parse_args()
-    if not args.database_url: raise SystemExit("Set DATABASE_URL or pass --database-url.")
-    rows = load_rows(args.database_url)
+    if args.dataset_dir:
+        rows = load_dataset_split(args.dataset_dir, args.split)
+    else:
+        if not args.database_url: raise SystemExit("Set DATABASE_URL or pass --database-url.")
+        rows = load_rows(args.database_url)
     if args.limit: rows = rows[:args.limit]
-    if not rows: raise SystemExit("No real sanitized Wave 1 messages found. Nothing was run.")
+    if not rows: raise SystemExit("No messages to score. Nothing was run.")
     from transformers import AutoModelForCausalLM, AutoTokenizer
     import torch
     tokenizer = AutoTokenizer.from_pretrained(MODEL)
@@ -63,8 +77,9 @@ def main():
     if args.device != "auto": model.to(args.device)
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     out = Path(args.output_dir); out.mkdir(parents=True, exist_ok=True)
-    output = out / f"qwen3-0.6b-baseline-{stamp}.jsonl"
-    with output.open("x", encoding="utf-8") as handle:
+    # Deterministic name when scoring a frozen split so the evaluator can find it.
+    output = out / (f"{args.split}-baseline.jsonl" if args.dataset_dir else f"qwen3-0.6b-baseline-{stamp}.jsonl")
+    with output.open("w", encoding="utf-8") as handle:
         for index, row in enumerate(rows, 1):
             messages = [{"role":"system", "content":SYSTEM}, {"role":"user", "content":user_content(row)}]
             text = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True, enable_thinking=False)
